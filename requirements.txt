@@ -1,0 +1,42 @@
+# --- UI ---
+PySide6>=6.7,<7
+
+# --- Hardware detection ---
+psutil>=5.9
+py-cpuinfo>=9.0
+GPUtil>=1.4.0          # best-effort NVIDIA VRAM detection; app must degrade gracefully without it
+wmi>=1.5.1; sys_platform == 'win32'   # Windows GPU/CPU detail fallback
+
+# --- Audio I/O ---
+sounddevice>=0.4.6
+numpy>=1.26
+webrtcvad>=2.0.10
+
+# --- ASR (default / CPU-friendly tier) ---
+faster-whisper>=1.0.3
+
+# --- ASR (higher-quality / GPU tier) — heavy, install on demand, not required for Phase 1 core ---
+# transformers>=4.45
+# torch>=2.3
+
+# --- Local LLM ---
+llama-cpp-python>=0.2.90
+
+# --- TTS (default / CPU-friendly tier) ---
+piper-tts>=1.2.0
+
+# --- TTS (higher-quality / GPU tier) — heavy, install on demand ---
+# torch>=2.3
+# (Qwen3-TTS runtime installed separately per app/models.json instructions when selected)
+
+# --- Networking / downloads ---
+requests>=2.31
+
+# --- Optional cloud fallback ---
+google-generativeai>=0.7.0
+
+# --- Secure credential storage ---
+keyring>=24.3
+
+# --- Packaging ---
+pyinstaller>=6.6; sys_platform == 'win32'
