@@ -20,7 +20,7 @@ faster-whisper>=1.0.3
 # torch>=2.3
 
 # --- Local LLM ---
-llama-cpp-python>=0.2.90
+llama-cpp-python>=0.3.2
 
 # --- TTS (default / CPU-friendly tier) ---
 piper-tts>=1.2.0
