@@ -20,6 +20,11 @@ faster-whisper>=1.0.3
 # torch>=2.3
 
 # --- Local LLM ---
+# 0.2.90 predates Qwen3 GGUF architecture support (and Qwen3's rope-scaling /
+# chat-template metadata specifically) -- must be >=0.3.2. Pulls in
+# typing_extensions, diskcache, jinja2, and markupsafe as new transitive deps
+# vs 0.2.x; collect_all("llama_cpp") in build.spec picks those up automatically
+# on rebuild, no manual step needed.
 llama-cpp-python>=0.3.2
 
 # --- TTS (default / CPU-friendly tier) ---
