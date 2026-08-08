@@ -25,7 +25,7 @@ faster-whisper>=1.0.3
 # typing_extensions, diskcache, jinja2, and markupsafe as new transitive deps
 # vs 0.2.x; collect_all("llama_cpp") in build.spec picks those up automatically
 # on rebuild, no manual step needed.
-llama-cpp-python>=0.3.2
+llama-cpp-python==0.2.77
 
 # --- TTS (default / CPU-friendly tier) ---
 piper-tts>=1.2.0
