@@ -14,16 +14,25 @@ datas = [
     ("app/models.json", "app"),
 ]
 
-# 2. Collect runtime data and assets
-datas += collect_data_files("piper")
-
-# 3. Collect all datas, binaries, and hiddenimports for heavy/C-extension packages
+# 2. Collect all datas, binaries, and hiddenimports for heavy/C-extension packages
 fw_datas, fw_binaries, fw_hidden = collect_all("faster_whisper")
 ct2_datas, ct2_binaries, ct2_hidden = collect_all("ctranslate2")
 onnx_datas, onnx_binaries, onnx_hidden = collect_all("onnxruntime")
 
-datas += fw_datas + ct2_datas + onnx_datas
-binaries = fw_binaries + ct2_binaries + onnx_binaries
+# llama_cpp_python ships a compiled shared library (llama.dll / ggml.dll on Windows,
+# under the package's own `lib/` folder) that it loads at runtime via ctypes rather
+# than a normal Python import. PyInstaller's static analysis can't see that, so
+# without this collect_all() the .dll never gets copied into the frozen build and
+# the app fails at startup with "can't find ...\_internal\llama_cpp\lib\llama.dll"
+# (or similar) the moment it tries to load the LLM.
+llama_datas, llama_binaries, llama_hidden = collect_all("llama_cpp")
+
+# piper-tts also ships native binaries/data (espeak-ng data, onnxruntime, etc.)
+# beyond what collect_data_files("piper") pulls in -- collect_all is safer here too.
+piper_datas, piper_binaries, piper_hidden = collect_all("piper")
+
+datas += fw_datas + ct2_datas + onnx_datas + llama_datas + piper_datas
+binaries = fw_binaries + ct2_binaries + onnx_binaries + llama_binaries + piper_binaries
 
 # 4. Define all hidden imports
 hiddenimports = [
@@ -36,7 +45,8 @@ hiddenimports = [
     "av",
     "huggingface_hub",
     "tokenizers",
-] + fw_hidden + ct2_hidden + onnx_hidden
+    "llama_cpp",
+] + fw_hidden + ct2_hidden + onnx_hidden + llama_hidden + piper_hidden
 
 a = Analysis(
     ["app/main.py"],
