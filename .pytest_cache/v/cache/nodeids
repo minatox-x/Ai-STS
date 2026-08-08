@@ -1,0 +1,13 @@
+[
+  "tests/test_hardware.py::test_detect_hardware_runs_without_error",
+  "tests/test_hardware.py::test_performance_tier_entry_level",
+  "tests/test_hardware.py::test_performance_tier_high_needs_real_gpu",
+  "tests/test_model_registry.py::test_catalog_loads",
+  "tests/test_model_registry.py::test_low_ram_never_recommends_gpu_only_higher_quality_as_recommended",
+  "tests/test_model_registry.py::test_safer_is_never_larger_than_recommended_ram",
+  "tests/test_router.py::test_current_info_routes_to_gemini",
+  "tests/test_router.py::test_local_when_gemini_disabled",
+  "tests/test_router.py::test_math_question_stays_local",
+  "tests/test_router.py::test_simple_question_stays_local",
+  "tests/test_router.py::test_web_pattern_routes_to_gemini"
+]
