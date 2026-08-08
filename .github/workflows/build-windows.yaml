@@ -33,6 +33,10 @@ jobs:
       - name: Build executable
         run: pyinstaller build.spec
 
+      - name: Force copy missing DLLs (PyInstaller Fix)
+        run: |
+          python -c "import os, shutil, llama_cpp; src = os.path.dirname(llama_cpp.__file__); dest = os.path.join('dist', 'Friend', '_internal', 'llama_cpp'); shutil.copytree(src, dest, dirs_exist_ok=True); print('Copied llama.dll successfully!')
+
       - name: Zip build output
         run: |
           powershell Compress-Archive -Path dist/Friend/* -DestinationPath Friend-windows.zip
