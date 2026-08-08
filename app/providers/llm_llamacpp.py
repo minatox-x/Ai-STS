@@ -39,7 +39,15 @@ class LlamaCppLLM(LLMProvider):
                 n_threads=settings.threads or (os.cpu_count() or 4),
                 n_gpu_layers=settings.gpu_layers,
                 seed=settings.seed if settings.seed is not None else -1,
-                verbose=False,
+                # verbose=True on purpose: llama.cpp's own native logger prints the
+                # REAL reason a model fails to load (wrong architecture, GGUF
+                # version mismatch, missing tensor, etc.) to stderr. With
+                # verbose=False that diagnostic is thrown away and all we get is a
+                # generic Python exception message, which is why failures were
+                # showing up as an unhelpful "corrupted or incompatible" message
+                # with no actionable detail. Run the app from a terminal (not by
+                # double-clicking the exe) to see this output.
+                verbose=True,
             )
             self._loaded = True
         except Exception as e:
@@ -47,7 +55,13 @@ class LlamaCppLLM(LLMProvider):
             suggestion = "The model file may be corrupted or incompatible with this llama-cpp-python version."
             if "memory" in msg.lower() or "alloc" in msg.lower():
                 suggestion = "Not enough RAM to load this model. Try a smaller model or lower context size."
-            raise ModelLoadError(f"Failed to load local LLM: {e}", suggestion=suggestion) from e
+            # Keep the real exception text in the message itself (not just logged)
+            # so it shows up in the UI error dialog -- generic wrapper messages were
+            # hiding the actual llama.cpp failure reason from the user.
+            raise ModelLoadError(
+                f"Failed to load local LLM ({type(e).__name__}): {e}",
+                suggestion=suggestion,
+            ) from e
 
     def unload(self) -> None:
         self._llm = None
